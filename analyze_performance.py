@@ -122,12 +122,14 @@ def plot_results(all_results: List[Dict]):
     """Generate performance plots."""
     quorums = [r["quorum"] for r in all_results]
     avg_latencies = [statistics.mean(r["latencies"]) for r in all_results]
-    
-    plt.figure(figsize=(10, 6))
-    plt.plot(quorums, avg_latencies, marker='o', linewidth=2, markersize=8)
+    median_latencies = [statistics.median(r["latencies"]) for r in all_results]
+    plt.figure(figsize=(12, 7))
+    plt.plot(quorums, avg_latencies, marker='o', linewidth=2, markersize=8, label='Average')
+    plt.plot(quorums, median_latencies, marker='s', linewidth=2, markersize=8, label='Median')
     plt.xlabel("Write Quorum", fontsize=12)
-    plt.ylabel("Average Latency (ms)", fontsize=12)
-    plt.title("Write Quorum and Latency", fontsize=14)
+    plt.ylabel("Latency (ms)", fontsize=12)
+    plt.title("Write Quorum and Latency (Delay Range: 0-1000ms)", fontsize=14)
+    plt.legend(fontsize=11)
     plt.grid(True, alpha=0.3)
     plt.xticks(quorums)
     plt.tight_layout()
