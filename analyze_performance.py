@@ -88,7 +88,7 @@ async def verify_consistency(client: httpx.AsyncClient) -> Dict:
     """Verify data consistency across all nodes."""
     response = await client.get(f"{LEADER_URL}/all")
     leader_data = response.json()["data"]
-    
+
     consistency = {
         "leader_keys": len(leader_data),
         "followers_match": 0,
@@ -179,7 +179,8 @@ async def main():
             all_results.append(results)
             
             print_statistics(results)
-
+            # previous writes may have not been performed yet, wait before checking
+            time.sleep(1)
             print("CONSISTENCY CHECK")
             print("\nVerifying data across all nodes...")
             consistency = await verify_consistency(client)
