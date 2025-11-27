@@ -23,7 +23,8 @@ class ReplicationService:
         self, 
         follower_url: str, 
         key: str, 
-        value: str
+        value: str,
+        timestamp: float
     ) -> Tuple[bool, str]:
         """
         Replicate a key-value pair to a single follower with random delay.
@@ -36,7 +37,7 @@ class ReplicationService:
         
         try:
             client = await self._get_client()
-            request = ReplicationRequest(key=key, value=value)
+            request = ReplicationRequest(key=key, value=value, timestamp=timestamp)
             response = await client.post(
                 f"{follower_url}/replicate",
                 json=request.model_dump(),
@@ -51,7 +52,7 @@ class ReplicationService:
             print(f"Replication to {follower_url} failed: {e}")
             return False, follower_url
     
-    async def replicate(self, key: str, value: str, quorum: int) -> Tuple[bool, int]:
+    async def replicate(self, key: str, value: str, timestamp: float, quorum: int) -> Tuple[bool, int]:
         """
         Replicate to followers concurrently with semi-synchronous replication.
         Uses asyncio.wait to return as soon as quorum is met (N out of M tasks).
@@ -59,6 +60,7 @@ class ReplicationService:
         Args:
             key: The key to replicate
             value: The value to replicate
+            timestamp: UTC timestamp for this write
             quorum: Number of successful replications needed
         
         Returns:
@@ -68,7 +70,7 @@ class ReplicationService:
             return True, 0
         
         tasks = [
-            asyncio.create_task(self._replicate_to_follower(url, key, value))
+            asyncio.create_task(self._replicate_to_follower(url, key, value, timestamp))
             for url in self.follower_urls
         ]
         

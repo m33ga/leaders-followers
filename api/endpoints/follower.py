@@ -13,7 +13,7 @@ async def replicate(request: ReplicationRequest):
     Replication endpoint - receives write operations from leader.
     Only available on follower nodes.
     """
-    await store.set(request.key, request.value)
+    await store.set(request.key, request.value, request.timestamp)
     
     return ReplicationResponse(
         success=True,

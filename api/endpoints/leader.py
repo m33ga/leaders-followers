@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
+from datetime import datetime, timezone
 from api.schemas import WriteRequest, WriteResponse, ReadResponse
 from api.store import KeyValueStore
 from api.replication import replication_service
@@ -20,11 +21,13 @@ async def write(request: WriteRequest):
             detail="Write operations are only allowed on the leader"
         )
     
-    await store.set(request.key, request.value)
+    timestamp = datetime.now(timezone.utc).timestamp()
+    await store.set(request.key, request.value, timestamp)
 
     success, replicated_count = await replication_service.replicate(
         key=request.key,
         value=request.value,
+        timestamp=timestamp,
         quorum=config.WRITE_QUORUM
     )
     

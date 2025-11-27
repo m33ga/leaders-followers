@@ -33,6 +33,7 @@ class ReplicationRequest(BaseModel):
     """Request model for replication to followers."""
     key: str
     value: str
+    timestamp: float
 
 
 class ReplicationResponse(BaseModel):
