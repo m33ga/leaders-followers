@@ -1,0 +1,70 @@
+services:
+  leader:
+    build: .
+    container_name: leader
+    ports:
+      - "8000:8000"
+    environment:
+      - ROLE=leader
+      - NODE_ID=leader-1
+      - PORT=8000
+      - WRITE_QUORUM=5
+      - MIN_DELAY_MS=0
+      - MAX_DELAY_MS=1000
+      - FOLLOWER_URLS=http://follower-1:8000,http://follower-2:8000,http://follower-3:8000,http://follower-4:8000,http://follower-5:8000
+    depends_on:
+      - follower-1
+      - follower-2
+      - follower-3
+      - follower-4
+      - follower-5
+
+  follower-1:
+    build: .
+    container_name: follower-1
+    ports:
+      - "8001:8000"
+    environment:
+      - ROLE=follower
+      - NODE_ID=follower-1
+      - PORT=8000
+
+  follower-2:
+    build: .
+    container_name: follower-2
+    ports:
+      - "8002:8000"
+    environment:
+      - ROLE=follower
+      - NODE_ID=follower-2
+      - PORT=8000
+
+  follower-3:
+    build: .
+    container_name: follower-3
+    ports:
+      - "8003:8000"
+    environment:
+      - ROLE=follower
+      - NODE_ID=follower-3
+      - PORT=8000
+
+  follower-4:
+    build: .
+    container_name: follower-4
+    ports:
+      - "8004:8000"
+    environment:
+      - ROLE=follower
+      - NODE_ID=follower-4
+      - PORT=8000
+
+  follower-5:
+    build: .
+    container_name: follower-5
+    ports:
+      - "8005:8000"
+    environment:
+      - ROLE=follower
+      - NODE_ID=follower-5
+      - PORT=8000
