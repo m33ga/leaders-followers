@@ -1,6 +1,19 @@
+x-app-template: &app-template
+  build: .
+  develop:
+    watch:
+      - action: sync
+        path: ./api
+        target: /app/api
+      - action: sync
+        path: ./main.py
+        target: /app/main.py
+      - action: rebuild
+        path: ./pyproject.toml
+
 services:
   leader:
-    build: .
+    <<: *app-template
     container_name: leader
     ports:
       - "8000:8000"
@@ -20,7 +33,7 @@ services:
       - follower-5
 
   follower-1:
-    build: .
+    <<: *app-template
     container_name: follower-1
     ports:
       - "8001:8000"
@@ -30,7 +43,7 @@ services:
       - PORT=8000
 
   follower-2:
-    build: .
+    <<: *app-template
     container_name: follower-2
     ports:
       - "8002:8000"
@@ -40,7 +53,7 @@ services:
       - PORT=8000
 
   follower-3:
-    build: .
+    <<: *app-template
     container_name: follower-3
     ports:
       - "8003:8000"
@@ -50,7 +63,7 @@ services:
       - PORT=8000
 
   follower-4:
-    build: .
+    <<: *app-template
     container_name: follower-4
     ports:
       - "8004:8000"
@@ -60,7 +73,7 @@ services:
       - PORT=8000
 
   follower-5:
-    build: .
+    <<: *app-template
     container_name: follower-5
     ports:
       - "8005:8000"
