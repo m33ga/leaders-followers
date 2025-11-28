@@ -118,16 +118,8 @@ async def test_all_endpoint_consistency(http_client):
 async def test_multiple_keys_overwrite(http_client):
     """Test overwriting multiple keys with different values."""
     keys_to_test = ["key_a", "key_b", "key_c"]
-    
-    for key in keys_to_test:
-        response = await http_client.post(
-            f"{LEADER_URL}/write",
-            json={"key": key, "value": f"{key}_v1"}
-        )
-        assert response.status_code == 200
-        assert response.json()["success"] is True
 
-    for iteration in range(2, 5):
+    for iteration in range(1, 5):
         for key in keys_to_test:
             response = await http_client.post(
                 f"{LEADER_URL}/write",
