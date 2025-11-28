@@ -32,7 +32,10 @@ While performing replication, we can see some data inconsistencies, especially i
 ![q5](images/q5.PNG)
 
 This happens because a newer value can be overwritten by an older value due to the random delay when replicating from leader to followers.
+
 ![inconsistency](images/inconsitency.PNG)
+
+![schema](images/schema.png)
 
 ### Timestamping values
 
